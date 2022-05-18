@@ -1,0 +1,76 @@
+CREATE DATABASE IF NOT EXISTS ddbb_sys_rest;
+USE ddbb_sys_rest;
+CREATE TABLE IF NOT EXISTS SEG_USUARIO(
+                id_usuario INT AUTO_INCREMENT NOT NULL,
+                usuario VARCHAR(10) NOT NULL,
+                email VARCHAR(100) NOT NULL,
+                contrasena VARCHAR(254) NOT NULL,
+                tipo VARCHAR(20) NOT NULL,
+                PRIMARY KEY (id_usuario),
+                UNIQUE (usuario),
+                UNIQUE (email));
+
+CREATE TABLE IF NOT EXISTS SEG_AUDT_USUARIO(
+                id_auditoria INT AUTO_INCREMENT NOT NULL,
+                usuario VARCHAR(50) NOT NULL,
+                accion VARCHAR(50) NOT NULL,
+                fecha DATE NOT NULL,
+                hora TIME NOT NULL,
+                PRIMARY KEY (id_auditoria));
+
+CREATE TABLE IF NOT EXISTS INV_CLIENTE(
+                id_cliente INT NOT NULL,
+                nombres VARCHAR(50) NOT NULL,
+                direccion VARCHAR(150) NOT NULL,
+                PRIMARY KEY (id_cliente));
+
+CREATE TABLE IF NOT EXISTS INV_PROVEEDOR(
+                id_proveedor INT NOT NULL,
+                nombres VARCHAR(50) NOT NULL,
+                direccion VARCHAR(50) NOT NULL,
+                celular VARCHAR(20) NOT NULL,
+                PRIMARY KEY (id_proveedor));
+
+CREATE TABLE IF NOT EXISTS INV_MATERIA_P(
+                id_materia_prima INT AUTO_INCREMENT NOT NULL,
+                descripcion VARCHAR(50) NOT NULL,
+                cantidad REAL NOT NULL,
+                id_proveedor INT,
+                observacion VARCHAR(50) NOT NULL,
+                PRIMARY KEY (id_materia_prima),
+                FOREIGN KEY (id_proveedor) REFERENCES INV_PROVEEDOR(id_proveedor) ON DELETE CASCADE ON UPDATE CASCADE,
+                UNIQUE (descripcion));
+
+CREATE TABLE IF NOT EXISTS CMP_COMPRA(
+                id_compra INT AUTO_INCREMENT NOT NULL,
+                id_materia_prima INT,
+                id_proveedor INT,
+                cantidad REAL NOT NULL,
+                precio REAL NOT NULL,
+                observacion VARCHAR(50) NOT NULL,
+                PRIMARY KEY (id_compra),
+                FOREIGN KEY (id_materia_prima) REFERENCES INV_MATERIA_P(id_materia_prima) ON DELETE CASCADE ON
+                UPDATE CASCADE,
+                FOREIGN KEY (id_proveedor) REFERENCES INV_PROVEEDOR(id_proveedor) ON DELETE CASCADE ON
+                UPDATE CASCADE);
+
+CREATE TABLE IF NOT EXISTS CTS_CUENTA_PAGAR(
+                id_cuenta_pagar VARCHAR(20) NOT NULL,
+                id_proveedor INT,
+                valor REAL NOT NULL,
+                fecha_pago DATE,
+                PRIMARY KEY (id_cuenta_pagar),
+                FOREIGN KEY (id_proveedor) REFERENCES INV_PROVEEDOR(id_proveedor)  ON DELETE CASCADE ON
+                UPDATE CASCADE);
+
+CREATE TABLE IF NOT EXISTS CTS_CUENTA_COBRAR(
+                id_cuenta_cobrar VARCHAR(20) NOT NULL,
+                id_cliente INT,
+                valor REAL NOT NULL,
+                fecha_pago DATE,
+                PRIMARY KEY (id_cuenta_cobrar),
+                FOREIGN KEY cts_cuenta_cobrar (id_cliente) REFERENCES INV_CLIENTE(id_cliente)  ON DELETE CASCADE ON
+                UPDATE CASCADE);
+
+
+select * from asistencia where time(fechahora)>='00:00:00' and time(fechahora)<='12:00:00';
